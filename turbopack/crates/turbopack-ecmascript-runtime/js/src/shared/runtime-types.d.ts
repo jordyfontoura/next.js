@@ -10,6 +10,12 @@
 type ChunkPath = string;
 type ModuleId = string;
 
+interface Exports {
+  __esModule?: boolean;
+
+  [key: string]: any;
+}
+
 type ChunkData =
   | ChunkPath
   | {
@@ -37,8 +43,8 @@ type LoadWebAssembly = (
 ) => Exports;
 type LoadWebAssemblyModule = (wasmChunkPath: ChunkPath) => WebAssembly.Module;
 
-type ModuleCache = Record<ModuleId, Module>;
-type ModuleFactories = Record<ModuleId, ModuleFactory>;
+type ModuleCache<M> = Record<ModuleId, M>;
+type ModuleFactories = Record<ModuleId, unknown>;
 
 type RelativeURL = (inputUrl: string) => void;
 type ResolvePathFromModule = (moduleId: string) => string;
@@ -56,7 +62,7 @@ type AsyncModule = (
 type ResolveAbsolutePath = (modulePath?: string) => string;
 type GetWorkerBlobURL = (chunks: ChunkPath[]) => string;
 
-interface TurbopackBaseContext {
+interface TurbopackBaseContext<M> {
   a: AsyncModule;
   e: Module["exports"];
   r: CommonJsRequire;
@@ -68,7 +74,7 @@ interface TurbopackBaseContext {
   v: ExportValue;
   n: ExportNamespace;
   m: Module;
-  c: ModuleCache;
+  c: ModuleCache<M>;
   M: ModuleFactories;
   l: LoadChunk;
   w: LoadWebAssembly;

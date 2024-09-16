@@ -13,6 +13,8 @@ interface HotData {
   prevExports?: Exports;
 }
 
+// Used through reference comments
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface HotState {
   selfAccepted: boolean | Function;
   selfDeclined: boolean;
@@ -60,6 +62,8 @@ interface Hot {
   check: (autoApply: boolean) => Promise<any[] | null>;
 }
 
+// Used through reference comments
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface Module {
   hot: Hot;
 }

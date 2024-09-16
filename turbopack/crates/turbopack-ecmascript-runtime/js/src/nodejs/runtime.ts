@@ -41,7 +41,7 @@ function stringifySourceInfo(source: SourceInfo): string {
 type ExternalRequire = (id: ModuleId) => Exports | EsmNamespaceObject;
 type ExternalImport = (id: ModuleId) => Promise<Exports | EsmNamespaceObject>;
 
-interface TurbopackNodeBuildContext extends TurbopackBaseContext {
+interface TurbopackNodeBuildContext extends TurbopackBaseContext<BaseModule> {
   R: ResolvePathFromModule;
   x: ExternalRequire;
   y: ExternalImport;
@@ -57,7 +57,7 @@ const fs = require("fs/promises");
 const vm = require("vm");
 
 const moduleFactories: ModuleFactories = Object.create(null);
-const moduleCache: ModuleCache = Object.create(null);
+const moduleCache: ModuleCache<BaseModule> = Object.create(null);
 
 /**
  * Returns an absolute path to the given module's id.
@@ -177,7 +177,7 @@ function loadWebAssemblyModule(chunkPath: ChunkPath) {
   return compileWebAssemblyFromPath(resolved);
 }
 
-function getWorkerBlobURL(_chunks: ChunkPath[]): never {
+function getWorkerBlobURL(_chunks: ChunkPath[]): string {
   throw new Error("Worker blobs are not implemented yet for Node.js");
 }
 
@@ -275,6 +275,7 @@ function instantiateModule(id: ModuleId, source: SourceInfo): Module {
 /**
  * Retrieves a module from the cache, or instantiate it if it is not cached.
  */
+// @ts-ignore
 function getOrInstantiateModuleFromParent(
   id: ModuleId,
   sourceModule: Module
@@ -312,6 +313,7 @@ function instantiateRuntimeModule(
 /**
  * Retrieves a module from the cache, or instantiate it as a runtime module if it is not cached.
  */
+// @ts-ignore TypeScript doesn't separate this module space from the browser runtime
 function getOrInstantiateRuntimeModule(
   moduleId: ModuleId,
   chunkPath: ChunkPath

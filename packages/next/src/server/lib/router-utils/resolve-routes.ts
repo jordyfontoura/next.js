@@ -588,7 +588,14 @@ export function getResolveRoutes(
                 continue
               }
               if (value) {
-                resHeaders[key] = value
+                // x-middleware-set-cookie isn't needed on the response to the client
+                // but it's still important that we include it on the request so that
+                // the underlying handler can seed the cookies ALS with the cookies
+                // from middleware.
+                if (key !== 'x-middleware-set-cookie') {
+                  resHeaders[key] = value
+                }
+
                 req.headers[key] = value
               }
             }
